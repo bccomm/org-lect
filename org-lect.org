@@ -1,0 +1,111 @@
+#+TITLE: =org-lect=: Flexible tracking for large childless tasks
+
+lectionary =/lekʃəneri/= n. (pl. lectionaries) a book or list of
+readings corresponding to a calendar
+
+* The problem
+  Bob is an avid emacs user who faithfully tracks his work using
+  =org-mode=. He loves the ability to outline plans in a logical
+  hierarchy and organize actionable items into his agenda view.
+
+  Recently, Bob wanted to set a new goal: finish /War and Peace/ by the
+  end of the year. He figures that he will need to read 20 pages every
+  day to make consistent progress. He also knows that if he can divide
+  up this large task into smaller ones, it will be easier to stay
+  motivated. How does he put such a task into =org-mode=? He could
+
+  1. Put "Pages 1-20," "Pages 21-40," ... "Pages 1200-1220" and so on
+     all on separate subheadings, setting a =DEADLINE= or =SCHEDULE= entry
+     for each one (too much work, inflexible)
+  2. Set a daily repeating task or habit saying "Read 20 more pages"
+     (boring, and still inflexible)
+  3. Forget dividing up the task at all, trusting that he'll just be
+     able to police himself every day (even through Chapter 5 of Book
+     9 is only /halfway/ through?)
+  4. Not use org-mode at all (blasphemy)
+  5. Use =org-lect=
+
+* What is =org-lect=? 
+  =org-lect= is an extension for =org-mode= that allows it to divide
+  projects or tasks into smaller chunks and track progress on these
+  smaller pieces without using discrete subheadings. Put simply, it
+  solves Bob's problem, described above. You might find it useful as
+  well.
+
+* Configuration
+  At the bare minimum, the task should have a =PAGES= property and a deadline.
+
+  The =PAGES= property consists of two numbers separated by a
+  space. The first is the current unit or page, and the second is the
+  total.
+
+  The =LECT_EFFORT= property allows effort to be scaled up or down for
+  specific days of the week. It should consist of seven
+  space-separated numbers, each denoting the relative effort assigned
+  to a day of the week, beginning with Sunday. For example:
+
+  - =0 1 1 1 1 1 0= puts equal effort on weekdays only
+  - =1 1 2 3 0 1 0= puts equal effort on Sunday, Monday, and Friday,
+    twice as much on Tuesday, three times as much on Wednesday, and
+    none on Thursday or Saturday.
+
+  If this property is not set, every day between now and the deadline
+  (inclusive) is given equal weight.
+
+* Usage
+  At the moment, the code provides the =org-lect-update-today= and
+  =org-agenda-lect-update-today= functions, which will put the number
+  of units needed for the current day into the =PAGESTODAY= property.
+  This can then be displayed in a custom agenda file or in column mode
+  if desired. A better way is being worked on.
+
+* Status and bugs
+  The current version is simply a set of prototype functions I have
+  built while learning lisp and customizing org-mode for
+  myself. Improvement opportunities abound.
+
+  Reports, pull requests, patches, threats of bodily harm, etc. should
+  all be done here on github.
+
+* Todo list
+  
+** TODO Bind a more user-friendly way to update progress
+   Currently, "PAGES" is a multivalued property (current page,
+   followed by total pages) that needs to be edited manually. Also,
+   the date of last progress is not tracked. This will be needed if
+   the user wants to update progress more than once per day.
+
+** TODO Get a more useful display format
+   Right now, org{,-agenda}-lect-update-today will simply update the
+   PAGESTODAY property, which can then be shown in a custom agenda
+   view.  Once there is a user-friendly update function in place, it
+   should find and update a progress cookie on the headline itself
+   (like the statistics cookie in checkbox lists and subtasks). We can
+   also write a hook for org-ctrl-c-ctrl-c to do the same.
+
+** TODO Refactor the storage model
+   Using properties the way I do here is a bit ugly. The properties I
+   do use (if any) should be renamed to avoid clashes.
+
+* Features for the more distant future
+
+  - Inherited progress from child and lower nodes
+  - Logical unit descriptions (ie. Page 10-B of Section 5 of Book
+    2, after skipping section 4 except page 8-A...)
+  - Incomplete child subtasks (fuzzy effort calculations)
+  - Nonlinear progress
+  - Bug immunity
+  - World peace 
+
+* License
+    This program is free software: you can redistribute it and/or
+    modify it under the terms of version 3 of the GNU General Public
+    License as published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
