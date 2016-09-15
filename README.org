@@ -1,4 +1,6 @@
 #+TITLE: =org-lect=: Flexible tracking for large childless tasks
+#+AUTHOR: Bruce Chiarell
+#+EMAIL: mano155 (worm-symbol) gmail (dot) com
 
 lectionary =/lekʃəneri/= n. (pl. lectionaries) a book or list of
 readings corresponding to a calendar
@@ -108,4 +110,4 @@ readings corresponding to a calendar
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    along with this program.  If not, see [[http://www.gnu.org/licenses/]].
