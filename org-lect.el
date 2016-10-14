@@ -24,22 +24,25 @@
   "Returns the number of units needed today to stay
 on track"
   (interactive "P")
-  (let ((curpage (string-to-number (nth 0 (org-entry-get-multivalued-property
-							 (or pom (point)) "LECT_PAGES"))))
-	(totpage (string-to-number (nth 1 (org-entry-get-multivalued-property
-							 (or pom (point)) "LECT_PAGES"))))
-	(deadl (org-time-stamp-to-now (format-time-string
-				       (org-time-stamp-format nil t)
-				       (org-get-deadline-time (or pom (point)))))))
+  (let ((curpage (string-to-number
+		  (nth 0 (org-entry-get-multivalued-property
+			  (or pom (point)) "LECT_PAGES"))))
+	(totpage (string-to-number
+		  (nth 1 (org-entry-get-multivalued-property
+			  (or pom (point)) "LECT_PAGES"))))
+	(deadl (org-time-stamp-to-now
+		(format-time-string (org-time-stamp-format nil t)
+				    (org-get-deadline-time (or pom (point)))))))
 	(* (/ (float (1+ (- totpage curpage)))
 	      (org-lect-get-effort-sum))
-	   (org-lect-get-effort (nth 6 (decode-time))))))
+	   (org-lect-get-effort (nth 6 (decode-time
+				      (org-read-date nil t "today" nil)))))))
 
 (defun org-lect-update-today (&optional pom)
   "Puts the amount of effort needed for the current day into the
 PAGESTODAY property"
   (interactive "P")
-  (org-entry-put (point) "PAGESTODAY"
+  (org-entry-put (or pom (point)) "PAGESTODAY"
 		 (number-to-string (org-lect-needed-effort-today))))
 
 (defun org-lect-agenda-update-today (arg)
@@ -70,12 +73,12 @@ org-agenda.el/org-agenda-deadline."
   "Returns the total amount of effort to invest before the
 deadline. The units returned are the same as are returned by
 org-lect-get-effort"
-  (let* ((deadl (org-time-stamp-to-now (format-time-string
-				       (org-time-stamp-format nil t)
-				       (org-get-deadline-time (or pom (point))))))
+  (let* ((deadl (org-time-stamp-to-now
+		 (format-time-string (org-time-stamp-format nil t)
+				     (org-get-deadline-time (or pom (point))))))
 	 (weeks (/ deadl 7))
 	 (days (% deadl 7))
-	 (curday (nth 6 (decode-time))) ;; FIXME: respect org-extend-day-until
+	 (curday (nth 6 (decode-time (org-read-date nil t "today" nil))))
 	 (k 0))
 
     ;; days stores the number of days until the deadline that are not
@@ -88,9 +91,10 @@ org-lect-get-effort"
     ;; weeks stores the number of complete weeks. After the extraneous
     ;; days have been added above, we simply take the complete weeks
     ;; and multiply by the effort factors for each day.     
-    (unless (< weeks 1) (setf j 6) (while (> j -1)
-				     (setf k (+ k (* weeks (org-lect-get-effort j))))
-					  (setf j (1- j))))
+    (unless (< weeks 1)
+      (setf j 6) (while (> j -1)
+		   (setf k (+ k (* weeks (org-lect-get-effort j))))
+		   (setf j (1- j))))
     (if (= k 0) 1 k)))
 
 
