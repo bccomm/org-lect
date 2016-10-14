@@ -1,5 +1,5 @@
 #+TITLE: =org-lect=: Flexible tracking for large childless tasks
-#+AUTHOR: Bruce Chiarell
+#+AUTHOR: Bruce Chiarelli
 #+EMAIL: mano155 (worm-symbol) gmail (dot) com
 
 lectionary =/lekʃəneri/= n. (pl. lectionaries) a book or list of
