@@ -1,15 +1,33 @@
-;; org-lect.el -- flexible tracking for large childless tasks
+;;; org-lect.el -- flexible tracking for large childless tasks
+
 ;;    Copyright (C) 2016 Bruce Chiarelli
 
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+
+(require 'org)
+(require 'org-agenda)
 
 (defun org-lect-needed-effort-today (&optional pom)
   "Returns the number of units needed today to stay
 on track"
   (interactive "P")
   (let ((curpage (string-to-number (nth 0 (org-entry-get-multivalued-property
-							 (or pom (point)) "PAGES"))))
+							 (or pom (point)) "LECT_PAGES"))))
 	(totpage (string-to-number (nth 1 (org-entry-get-multivalued-property
-							 (or pom (point)) "PAGES"))))
+							 (or pom (point)) "LECT_PAGES"))))
 	(deadl (org-time-stamp-to-now (format-time-string
 				       (org-time-stamp-format nil t)
 				       (org-get-deadline-time (or pom (point)))))))
@@ -26,24 +44,7 @@ PAGESTODAY property"
   (org-entry-put (point) "PAGESTODAY"
 		 (number-to-string (org-lect-needed-effort-today))))
 
-
-
-;; Decide whether the last progress happened today or not
-;; (if (= 0 (org-time-stamp-to-now (org-entry-get (point) "LAST_PROGRESS"))) (message "SWEET") (message "OLD"))
-
-;; Sets the last progress field to today
-;; (org-set-property "LAST_PROGRESS" (format-time-string (org-time-stamp-format nil t)))
-
-;; Split a last progress entry consisting of a date followed by a number (get the number)
-;; (string-to-number (nth 1 (split-string (org-entry-get (point) "LAST_PROGRESS") "]")))
-;; or use org-entry-get-multivalued-property
-;; or use org-entry-put-multivalued-property
-
-;; Round the division above to two digits
-;; (format "%0.2f" (* .01 (round (* 100 (string-to-number (org-lect-needed-effort-today))))))
-;; or (format "%0.2f" (string-to-number (org-lect-needed-effort-today)))
-
-(defun org-agenda-lect-update-today (arg)
+(defun org-lect-agenda-update-today (arg)
   "Like org-lect-needed-effort-today, but works from the agenda.
 ARG is passed through. Implementation was inspired by
 org-agenda.el/org-agenda-deadline."
@@ -95,3 +96,5 @@ org-lect-get-effort"
     (if (= k 0) 1 k)))
 
 
+(provide 'org-lect)
+;;; org-lect.el ends here
