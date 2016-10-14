@@ -31,11 +31,9 @@ on track"
 	(deadl (org-time-stamp-to-now (format-time-string
 				       (org-time-stamp-format nil t)
 				       (org-get-deadline-time (or pom (point)))))))
-    (if (org-entry-get (or pom (point)) "LECT_EFFORT")
-	(* (/ (float (+ 1 (- totpage curpage)))
+	(* (/ (float (1+ (- totpage curpage)))
 	      (org-lect-get-effort-sum))
-	   (org-lect-get-effort (nth 6 (decode-time))))
-      (/ (float (+ 1 (- totpage curpage))) (float (+ 1 deadl))))))
+	   (org-lect-get-effort (nth 6 (decode-time))))))
 
 (defun org-lect-update-today (&optional pom)
   "Puts the amount of effort needed for the current day into the
@@ -61,12 +59,12 @@ org-agenda.el/org-agenda-deadline."
 	(goto-char pos)
 	(org-lect-update-today)))))
 
-
-
 (defun org-lect-get-effort (day &optional pom)
   "Returns the effort required on day (0=Sunday...6=Saturday)"
-  (string-to-number (nth day (org-entry-get-multivalued-property
-			      (or pom (point)) "LECT_EFFORT"))))
+  (if (org-entry-get (or pom (point)) "LECT_EFFORT")
+      (string-to-number (nth day (org-entry-get-multivalued-property
+				  (or pom (point)) "LECT_EFFORT")))
+    1))
 
 (defun org-lect-get-effort-sum (&optional pom)
   "Returns the total amount of effort to invest before the
@@ -92,7 +90,7 @@ org-lect-get-effort"
     ;; and multiply by the effort factors for each day.     
     (unless (< weeks 1) (setf j 6) (while (> j -1)
 				     (setf k (+ k (* weeks (org-lect-get-effort j))))
-					  (setf j (- j 1))))
+					  (setf j (1- j))))
     (if (= k 0) 1 k)))
 
 
