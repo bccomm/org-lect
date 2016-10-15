@@ -35,9 +35,10 @@ readings corresponding to a calendar
   well.
 
 * Configuration
-  At the bare minimum, the task should have a =PAGES= property and a deadline.
+  At the bare minimum, the task should have a =LECT_PAGES= property
+  and a deadline.
 
-  The =PAGES= property consists of two numbers separated by a
+  The =LECT_PAGES= property consists of two numbers separated by a
   space. The first is the current unit or page, and the second is the
   total.
 
@@ -72,7 +73,7 @@ readings corresponding to a calendar
 * Todo list
   
 ** TODO Bind a more user-friendly way to update progress
-   Currently, "PAGES" is a multivalued property (current page,
+   Currently, =LECT_PAGES= is a multivalued property (current page,
    followed by total pages) that needs to be edited manually. Also,
    the date of last progress is not tracked. This will be needed if
    the user wants to update progress more than once per day.
@@ -84,10 +85,6 @@ readings corresponding to a calendar
    should find and update a progress cookie on the headline itself
    (like the statistics cookie in checkbox lists and subtasks). We can
    also write a hook for org-ctrl-c-ctrl-c to do the same.
-
-** TODO Refactor the storage model
-   Using properties the way I do here is a bit ugly. The properties I
-   do use (if any) should be renamed to avoid clashes.
 
 * Features for the more distant future
 
