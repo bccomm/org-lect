@@ -72,13 +72,13 @@ readings corresponding to a calendar
 
 * Todo list
   
-** TODO Bind a more user-friendly way to update progress
+** NEXT Bind a more user-friendly way to update progress
    Currently, =LECT_PAGES= is a multivalued property (current page,
    followed by total pages) that needs to be edited manually. Also,
    the date of last progress is not tracked. This will be needed if
    the user wants to update progress more than once per day.
 
-** TODO Get a more useful display format
+** NEXT Get a more useful display format
    Right now, org{,-agenda}-lect-update-today will simply update the
    PAGESTODAY property, which can then be shown in a custom agenda
    view.  Once there is a user-friendly update function in place, it

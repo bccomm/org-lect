@@ -23,25 +23,22 @@
 (defun org-lect-needed-effort-today (&optional pom)
   "Returns the number of units needed today to stay
 on track"
-  (interactive "P")
-  (let ((curpage (string-to-number
-		  (nth 0 (org-entry-get-multivalued-property
-			  (or pom (point)) "LECT_PAGES"))))
-	(totpage (string-to-number
-		  (nth 1 (org-entry-get-multivalued-property
-			  (or pom (point)) "LECT_PAGES"))))
-	(deadl (org-time-stamp-to-now
-		(format-time-string (org-time-stamp-format nil t)
-				    (org-get-deadline-time (or pom (point)))))))
-	(* (/ (float (1+ (- totpage curpage)))
-	      (org-lect-get-effort-sum))
-	   (org-lect-get-effort (nth 6 (decode-time
-				      (org-read-date nil t "today" nil)))))))
+  (interactive)
+  (let* ((propstring (org-entry-get-multivalued-property (or pom (point)) "LECT_PAGES"))
+	 (curpage (string-to-number (nth 0 propstring)))
+	 (totpage (string-to-number (nth 1 propstring)))
+	 (deadl (org-time-stamp-to-now
+		 (format-time-string (org-time-stamp-format nil t)
+				     (org-get-deadline-time (or pom (point)))))))
+    (* (/ (float (- totpage curpage))
+	  (org-lect-get-effort-sum))
+       (org-lect-get-effort (nth 6 (decode-time
+				    (org-read-date nil t "today" nil)))))))
 
 (defun org-lect-update-today (&optional pom)
   "Puts the amount of effort needed for the current day into the
 PAGESTODAY property"
-  (interactive "P")
+  (interactive)
   (org-entry-put (or pom (point)) "PAGESTODAY"
 		 (number-to-string (org-lect-needed-effort-today))))
 
@@ -49,7 +46,7 @@ PAGESTODAY property"
   "Like org-lect-needed-effort-today, but works from the agenda.
 ARG is passed through. Implementation was inspired by
 org-agenda.el/org-agenda-deadline."
-  (interactive "P")
+  (interactive)
   (org-agenda-check-type t 'agenda 'timeline 'todo 'tags 'search)
   (org-agenda-check-no-diary)
   (let* ((marker (or (org-get-at-bol 'org-marker)
@@ -79,23 +76,23 @@ org-lect-get-effort"
 	 (weeks (/ deadl 7))
 	 (days (% deadl 7))
 	 (curday (nth 6 (decode-time (org-read-date nil t "today" nil))))
-	 (k 0))
+	 (total 0))
 
     ;; days stores the number of days until the deadline that are not
     ;; within a complete week. These extra days can be counted from
     ;; the current day. We add these up first, multiplied by the
     ;; appropriate effort factor
-    (while (> days -1) (setf k (+ k (org-lect-get-effort
-				     (% (+ days curday) 7))))
+    (while (> days -1) (setf total (+ total (org-lect-get-effort
+					     (% (+ days curday) 7))))
 	   (setf days (- days 1)))
     ;; weeks stores the number of complete weeks. After the extraneous
     ;; days have been added above, we simply take the complete weeks
     ;; and multiply by the effort factors for each day.     
     (unless (< weeks 1)
-      (setf j 6) (while (> j -1)
-		   (setf k (+ k (* weeks (org-lect-get-effort j))))
-		   (setf j (1- j))))
-    (if (= k 0) 1 k)))
+      (setf dow 6) (while (> dow -1)
+		     (setf total (+ total (* weeks (org-lect-get-effort dow))))
+		     (setf dow (1- dow))))
+    (if (= total 0) 1 total)))
 
 
 (provide 'org-lect)
