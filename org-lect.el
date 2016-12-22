@@ -23,17 +23,17 @@
 (defun org-lect-needed-effort-today (&optional pom)
   "Returns the number of units needed today to stay
 on track"
-  (interactive)
   (let* ((propstring (org-entry-get-multivalued-property (or pom (point)) "LECT_PAGES"))
 	 (curpage (string-to-number (nth 0 propstring)))
 	 (totpage (string-to-number (nth 1 propstring)))
+	 (effort (org-lect-get-effort (nth 6 (decode-time
+					      (org-read-date nil t "today" nil)))))
 	 (deadl (org-time-stamp-to-now
 		 (format-time-string (org-time-stamp-format nil t)
 				     (org-get-deadline-time (or pom (point)))))))
     (* (/ (float (- totpage curpage))
 	  (org-lect-get-effort-sum))
-       (org-lect-get-effort (nth 6 (decode-time
-				    (org-read-date nil t "today" nil)))))))
+       effort)))
 
 (defun org-lect-update-today (&optional pom)
   "Puts the amount of effort needed for the current day into the
