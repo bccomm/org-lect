@@ -20,17 +20,27 @@
 (require 'org)
 (require 'org-agenda)
 
+(defun org-lect-is-lect-p (&optional pom)
+  "Returns t if the thing at point or pom is managed by
+  org-lect"
+  (if (or (org-entry-get (or pom (point)) "LECT_PAGES")
+	  (org-entry-get (or pom (point)) "LECT_UNITS")) t nil))
+
 (defun org-lect-needed-effort-today (&optional pom)
-  "Returns the number of units needed today to stay
-on track"
-  (let* ((propstring (org-entry-get-multivalued-property (or pom (point)) "LECT_PAGES"))
+  "Returns the number of units needed today to stay on track"
+  (let* ((propstring (or (org-entry-get-multivalued-property
+			  (or pom (point)) "LECT_PAGES")
+			 (org-entry-get-multivalued-property
+			  (or pom (point)) "LECT_UNITS")))
 	 (curpage (string-to-number (nth 0 propstring)))
 	 (totpage (string-to-number (nth 1 propstring)))
-	 (effort (org-lect-get-effort (nth 6 (decode-time
-					      (org-read-date nil t "today" nil)))))
+	 (effort (org-lect-get-effort
+		  (nth 6 (decode-time
+			  (org-read-date nil t "today" nil)))))
 	 (deadl (org-time-stamp-to-now
 		 (format-time-string (org-time-stamp-format nil t)
-				     (org-get-deadline-time (or pom (point)))))))
+				     (org-get-deadline-time
+				      (or pom (point)))))))
     (* (/ (float (- totpage curpage))
 	  (org-lect-get-effort-sum))
        effort)))
@@ -41,6 +51,20 @@ PAGESTODAY property"
   (interactive)
   (org-entry-put (or pom (point)) "PAGESTODAY"
 		 (number-to-string (org-lect-needed-effort-today))))
+
+(defun org-lect-get-last (&optional pom)
+  "Gets and parses the list LECT_LAST multivalued property, which
+  consists of the last date on which progress was made and the
+  number of pages made then. This function returns a list with
+  the number of days since last progress"
+  (let ((lastdate (or (nth 0 (org-entry-get-multivalued-property
+			      (or pom (point)) "LECT_LAST"))
+		      nil))
+	(lastprog (or (nth 1 (org-entry-get-multivalued-property
+			      (or pom (point)) "LECT_LAST")))))
+    (when lastdate (list (org-time-stamp-to-now lastdate)
+			 (string-to-number lastprog)))))
+
 
 (defun org-lect-agenda-update-today (arg)
   "Like org-lect-needed-effort-today, but works from the agenda.
