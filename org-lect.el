@@ -62,8 +62,9 @@ PAGESTODAY property"
 		      nil))
 	(lastprog (or (nth 1 (org-entry-get-multivalued-property
 			      (or pom (point)) "LECT_LAST")))))
-    (when lastdate (list (org-time-stamp-to-now lastdate)
-			 (string-to-number lastprog)))))
+    (if lastdate (list (org-time-stamp-to-now lastdate)
+		       (string-to-number lastprog))
+      (list nil nil))))
 
 
 (defun org-lect-agenda-update-today (arg)
