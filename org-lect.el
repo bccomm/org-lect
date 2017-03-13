@@ -23,15 +23,15 @@
 (defun org-lect-is-lect-p (&optional pom)
   "Returns t if the thing at point or pom is managed by
   org-lect"
-  (if (or (org-entry-get (or pom (point)) "LECT_PAGES")
-	  (org-entry-get (or pom (point)) "LECT_UNITS")) t nil))
+  (if (or (org-entry-get (or pom (point)) "LECT_UNITS")
+	  (org-entry-get (or pom (point)) "LECT_PAGES")) t nil))
 
 (defun org-lect-needed-effort-today (&optional pom)
   "Returns the number of units needed today to stay on track"
   (let* ((propstring (or (org-entry-get-multivalued-property
-			  (or pom (point)) "LECT_PAGES")
+			  (or pom (point)) "LECT_UNITS")
 			 (org-entry-get-multivalued-property
-			  (or pom (point)) "LECT_UNITS")))
+			  (or pom (point)) "LECT_PAGES")))
 	 (curpage (string-to-number (nth 0 propstring)))
 	 (totpage (string-to-number (nth 1 propstring)))
 	 (effort (org-lect-get-effort
@@ -112,7 +112,7 @@ org-lect-get-effort"
 	   (setf days (- days 1)))
     ;; weeks stores the number of complete weeks. After the extraneous
     ;; days have been added above, we simply take the complete weeks
-    ;; and multiply by the effort factors for each day.     
+    ;; and multiply by the effort factors for each day.
     (unless (< weeks 1)
       (setf dow 6) (while (> dow -1)
 		     (setf total (+ total (* weeks (org-lect-get-effort dow))))
