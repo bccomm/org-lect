@@ -1,6 +1,11 @@
-;;; org-lect.el -- flexible tracking for large childless tasks
+;;; org-lect.el -- Pace calculation for large childless tasks in Org
 
-;;    Copyright (C) 2016 Bruce Chiarelli
+;; Copyright (C) 2016 Bruce Chiarelli
+
+;; Version: 0.1
+;; Package-Requires: ((org-mode "8.0"))
+;; Keywords: pim, org-mode, calendar
+;; URL https://github.com/bccomm/org-lect
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -17,17 +22,28 @@
 ;; Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
+
+;;; Commentary:
+;; This package provides functions to calculate an appropriate pace
+;; for completing large tasks, given a deadline, number of units or
+;; pages, and (optionally) a specification for scaling the effort up
+;; or down depending on the day of the week.  See the README.org file
+;; for more details.
+
 (require 'org)
 (require 'org-agenda)
 
+;;; Code:
+
 (defun org-lect-is-lect-p (&optional pom)
-  "Returns t if the thing at point or pom is managed by
-  org-lect"
+  "Return t if the current item is managed by org-lect.
+Reads either from point or a specified point or marker POM."
   (if (or (org-entry-get (or pom (point)) "LECT_UNITS")
 	  (org-entry-get (or pom (point)) "LECT_PAGES")) t nil))
 
 (defun org-lect-needed-effort-today (&optional pom)
-  "Returns the number of units needed today to stay on track"
+  "Return the number of units needed today to stay on track.
+Considers the heading at point or at POM, if specified."
   (let* ((propstring (or (org-entry-get-multivalued-property
 			  (or pom (point)) "LECT_UNITS")
 			 (org-entry-get-multivalued-property
@@ -46,17 +62,18 @@
        effort)))
 
 (defun org-lect-update-today (&optional pom)
-  "Puts the amount of effort needed for the current day into the
-PAGESTODAY property"
+  "Puts the effort needed for the current day into PAGESTODAY.
+Proceeds either from point or the specified POM."
   (interactive)
   (org-entry-put (or pom (point)) "PAGESTODAY"
 		 (number-to-string (org-lect-needed-effort-today))))
 
 (defun org-lect-get-last (&optional pom)
-  "Gets and parses the list LECT_LAST multivalued property, which
-  consists of the last date on which progress was made and the
-  number of pages made then. This function returns a list with
-  the number of days since last progress"
+  "Gets and parse the list LECT_LAST multivalued property.
+This consists of the last date on which progress was made and the
+number of pages made then, considered either at point or POM. The
+function returns a list with the number of days since last
+progress."
   (let ((lastdate (or (nth 0 (org-entry-get-multivalued-property
 			      (or pom (point)) "LECT_LAST"))
 		      nil))
@@ -67,7 +84,7 @@ PAGESTODAY property"
       (list nil nil))))
 
 (defun org-lect-agenda-update-today ()
-  "Like org-lect-needed-effort-today, but works from the agenda.
+  "Like ‘org-lect-needed-effort-today’, but works from the agenda.
 Implementation was inspired by org-agenda.el/org-agenda-deadline."
   (interactive)
   (org-agenda-check-type t 'agenda 'timeline 'todo 'tags 'search)
@@ -83,16 +100,17 @@ Implementation was inspired by org-agenda.el/org-agenda-deadline."
 	(org-lect-update-today)))))
 
 (defun org-lect-get-effort (day &optional pom)
-  "Returns the effort required on day (0=Sunday...6=Saturday)"
+  "Return the effort required on DAY (0=Sunday...6=Saturday).
+Reads from point or POM."
   (if (org-entry-get (or pom (point)) "LECT_EFFORT")
       (string-to-number (nth day (org-entry-get-multivalued-property
 				  (or pom (point)) "LECT_EFFORT")))
     1))
 
 (defun org-lect-get-effort-sum (&optional pom)
-  "Returns the total amount of effort to invest before the
-deadline. The units returned are the same as are returned by
-org-lect-get-effort"
+  "Return the total effort to invest before the deadline.
+The units returned are the same as are returned by ‘org-lect-get-effort’.
+Considers the task near point or POM."
   (let* ((deadl (org-time-stamp-to-now
 		 (format-time-string (org-time-stamp-format nil t)
 				     (org-get-deadline-time (or pom (point))))))
