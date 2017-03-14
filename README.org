@@ -1,42 +1,46 @@
-#+TITLE: =org-lect=: Flexible tracking for large childless tasks
+#+TITLE: =org-lect=: Pace calculation for large childless tasks
 #+AUTHOR: Bruce Chiarelli
 #+EMAIL: mano155 (worm-symbol) gmail (dot) com
 
 lectionary =/lekʃəneri/= n. (pl. lectionaries) a book or list of
 readings corresponding to a calendar
 
-* The problem
-  Bob is an avid emacs user who faithfully tracks his work using
-  =org-mode=. He loves the ability to outline plans in a logical
-  hierarchy and organize actionable items into his agenda view.
+* What is =org-lect=? 
+  =org-lect= is an extension for =Org= which calculates a reasonable
+  pace needed to attain some numerical goal given a deadline. It can
+  be used for books, classes, hours of work, word goals for writing,
+  and so on. If you miss a day, it will recalculate the rest of the
+  days fairly. I've used it to motivate myself to complete online
+  courses and make large reading goals more manageable (even when the
+  material was fantastically boring).
 
-  Recently, Bob wanted to set a new goal: finish /War and Peace/ by the
-  end of the year. He figures that he will need to read 20 pages every
-  day to make consistent progress. He also knows that if he can divide
-  up this large task into smaller ones, it will be easier to stay
-  motivated. How does he put such a task into =org-mode=? He could
+  It won't solve procrastination on its own, but it can make certain
+  large tasks seem less daunting. Some GTD practitioners might find
+  this approach counter to David Allen's philosophy, which I don't
+  deny, but I hope it is useful to them nonetheless.
 
-  1. Put "Pages 1-20," "Pages 21-40," ... "Pages 1200-1220" and so on
+* Example use case
+  Suppose you wanted to read /War and Peace/ over the course of a
+  month. A quick calculation shows that you'll need to read about 40
+  pages every day to make consistent progress. You know that there
+  might be some temptation to give up when you hit a really boring
+  part, but if you just make progress, it should be worth it. How
+  would you put this into =Org=?
+
+  1. Put "Pages 1-40," "Pages 41-80," ... "Pages 1200-1220" and so on
      all on separate subheadings, setting a =DEADLINE= or =SCHEDULE= entry
-     for each one (too much work, inflexible)
-  2. Set a daily repeating task or habit saying "Read 20 more pages"
-     (boring, and still inflexible)
-  3. Forget dividing up the task at all, trusting that he'll just be
-     able to police himself every day (even through Chapter 5 of Book
-     9 is only /halfway/ through?)
-  4. Not use org-mode at all (blasphemy)
+     for each one (too much busywork, inflexible)
+  2. Set a daily repeating task or habit saying "Read 40 more pages"
+     (boring, and still inflexible: what if you miss a day?)
+  3. Forget dividing up the task at all, trusting that you'll just be
+     able to police yourself every day and know when you're falling
+     behind (good luck :))
+  4. Not use =Org= at all (blasphemy)
   5. Use =org-lect=
 
-* What is =org-lect=? 
-  =org-lect= is an extension for =org-mode= that allows it to divide
-  projects or tasks into smaller chunks and track progress on these
-  smaller pieces without using discrete subheadings. Put simply, it
-  solves Bob's problem, described above. You might find it useful as
-  well.
-
 * Configuration
-  At the bare minimum, the task should have a =LECT_PAGES= property
-  and a deadline.
+  At minimum, the task should have a =LECT_PAGES= or =LECT_UNITS=
+  property (it doesn't matter which) and a =DEADLINE=.
 
   The =LECT_PAGES= property consists of two numbers separated by a
   space. The first is the current unit or page, and the second is the
@@ -60,41 +64,21 @@ readings corresponding to a calendar
   =org-agenda-lect-update-today= functions, which will put the number
   of units needed for the current day into the =PAGESTODAY= property.
   This can then be displayed in a custom agenda file or in column mode
-  if desired. A better way is being worked on.
+  if desired. I'm currently working on implementing a headline cookie,
+  similar to what is used for checkboxes.
+
+  I typically bind both functions to =C-\= (one in =Org=, the other in
+  agenda mode). I have found it most helpful to make =-lect= items
+  =-habit= items as well.
 
 * Status and bugs
-  The current version is simply a set of prototype functions I have
-  built while learning lisp and customizing org-mode for
-  myself. Improvement opportunities abound.
+  The current version is simply a set of functions I have written
+  while customizing =Org= for myself (though I did use it to complete
+  a semester-long online class in under three weeks last
+  year!). Improvement opportunities abound.
 
   Reports, pull requests, patches, threats of bodily harm, etc. should
   all be done here on github.
-
-* Todo list
-  
-** NEXT Bind a more user-friendly way to update progress
-   Currently, =LECT_PAGES= is a multivalued property (current page,
-   followed by total pages) that needs to be edited manually. Also,
-   the date of last progress is not tracked. This will be needed if
-   the user wants to update progress more than once per day.
-
-** NEXT Get a more useful display format
-   Right now, org{,-agenda}-lect-update-today will simply update the
-   PAGESTODAY property, which can then be shown in a custom agenda
-   view.  Once there is a user-friendly update function in place, it
-   should find and update a progress cookie on the headline itself
-   (like the statistics cookie in checkbox lists and subtasks). We can
-   also write a hook for org-ctrl-c-ctrl-c to do the same.
-
-* Features for the more distant future
-
-  - Inherited progress from child and lower nodes
-  - Logical unit descriptions (ie. Page 10-B of Section 5 of Book
-    2, after skipping section 4 except page 8-A...)
-  - Incomplete child subtasks (fuzzy effort calculations)
-  - Nonlinear progress
-  - Bug immunity
-  - World peace 
 
 * License
     This program is free software: you can redistribute it and/or
