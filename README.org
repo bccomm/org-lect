@@ -6,37 +6,38 @@ lectionary =/lekʃəneri/= n. (pl. lectionaries) a book or list of
 readings corresponding to a calendar
 
 * What is =org-lect=? 
-  =org-lect= is an extension for =Org= which calculates a reasonable
-  pace needed to attain some numerical goal given a deadline. It can
-  be used for books, classes, hours of work, word goals for writing,
-  and so on. If you miss a day, it will recalculate the rest of the
-  days fairly. I've used it to motivate myself to complete online
-  courses and make large reading goals more manageable (even when the
-  material was fantastically boring).
+  =org-lect= is an extension for Org mode. It calculates a reasonable
+  pace needed to attain some user-defined numerical goal within a
+  given timeframe.
 
-  It won't solve procrastination on its own, but it can make certain
-  large tasks seem less daunting. Some GTD practitioners might find
-  this approach counter to David Allen's philosophy, which I don't
-  deny, but I hope it is useful to them nonetheless.
+  It can be used for books, classes, hours of work, word count goals
+  for writing, and so on. If you miss a day, it will recalculate the
+  remaining days evenly. I've used it to motivate myself to complete
+  online courses and make large reading goals more manageable (even
+  when the material in question was fantastically dull). It won't
+  solve procrastination on its own, but it can make certain large
+  tasks seem less daunting.
 
-* Example use case
-  Suppose you wanted to read /War and Peace/ over the course of a
-  month. A quick calculation shows that you'll need to read about 40
-  pages every day to make consistent progress. You know that there
-  might be some temptation to give up when you hit a really boring
-  part, but if you just make progress, it should be worth it. How
-  would you put this into =Org=?
+  Some GTD practitioners might find this approach counter to David
+  Allen's philosophy, which I don't deny, but I hope it is useful to
+  them and anyone else regardless.
 
-  1. Put "Pages 1-40," "Pages 41-80," ... "Pages 1200-1220" and so on
-     all on separate subheadings, setting a =DEADLINE= or =SCHEDULE= entry
-     for each one (too much busywork, inflexible)
-  2. Set a daily repeating task or habit saying "Read 40 more pages"
-     (boring, and still inflexible: what if you miss a day?)
-  3. Forget dividing up the task at all, trusting that you'll just be
-     able to police yourself every day and know when you're falling
-     behind (good luck :))
-  4. Not use =Org= at all (blasphemy)
-  5. Use =org-lect=
+** Example use case
+   Suppose you wanted to read /War and Peace/ over the course of a
+   month. A quick calculation shows that you'll need to read about 40
+   pages every day to make consistent progress. How would you put this
+   into Org?
+
+   1. Put "Pages 1-40," "Pages 41-80," ... "Pages 1200-1220" and so on
+      all on separate subheadings, setting a =DEADLINE= or =SCHEDULE= entry
+      for each one (too much busywork, inflexible)
+   2. Set a daily repeating task or habit saying "Read 40 more pages"
+      (boring, and still inflexible: what if you miss a day?)
+   3. Forget dividing up the task at all, trusting that you'll just be
+      able to police yourself every day and know when you're falling
+      behind (good luck :))
+   4. Not use Org at all (blasphemy)
+   5. Use =org-lect=
 
 * Configuration
   At minimum, the task should have a =LECT_PAGES= or =LECT_UNITS=
@@ -67,13 +68,13 @@ readings corresponding to a calendar
   if desired. I'm currently working on implementing a headline cookie,
   similar to what is used for checkboxes.
 
-  I typically bind both functions to =C-\= (one in =Org=, the other in
-  agenda mode). I have found it most helpful to make =-lect= items
-  =-habit= items as well.
+  I typically bind both functions to =C-\= (one in Org, the other in
+  agenda mode). I have found it most helpful to make =org-lect= items
+  habit items as well.
 
 * Status and bugs
   The current version is simply a set of functions I have written
-  while customizing =Org= for myself (though I did use it to complete
+  while customizing Org for myself (though I did use it to complete
   a semester-long online class in under three weeks last
   year!). Improvement opportunities abound.
 
