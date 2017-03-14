@@ -66,11 +66,9 @@ PAGESTODAY property"
 		       (string-to-number lastprog))
       (list nil nil))))
 
-
-(defun org-lect-agenda-update-today (arg)
+(defun org-lect-agenda-update-today ()
   "Like org-lect-needed-effort-today, but works from the agenda.
-ARG is passed through. Implementation was inspired by
-org-agenda.el/org-agenda-deadline."
+Implementation was inspired by org-agenda.el/org-agenda-deadline."
   (interactive)
   (org-agenda-check-type t 'agenda 'timeline 'todo 'tags 'search)
   (org-agenda-check-no-diary)
