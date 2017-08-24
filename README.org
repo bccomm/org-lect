@@ -6,7 +6,7 @@ lectionary =/lekʃəneri/= n. (pl. lectionaries) a book or list of
 readings corresponding to a calendar
 
 * What is =org-lect=? 
-  =org-lect= is an extension for Org mode. It calculates a reasonable
+  =org-lect= is an extension for Emacs Org mode. It calculates a reasonable
   pace needed to attain some user-defined numerical goal within a
   given timeframe.
 
